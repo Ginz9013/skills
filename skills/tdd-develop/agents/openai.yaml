@@ -1,0 +1,6 @@
+interface:
+  display_name: "TDD Development Workflow"
+  short_description: "Plan a board, then implement its tickets test-first, one at a time"
+  default_prompt: "Use $tdd-develop to take this change from requirements through interface design, planning, test-first implementation, and review."
+policy:
+  allow_implicit_invocation: false

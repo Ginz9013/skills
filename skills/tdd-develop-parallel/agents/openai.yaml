@@ -1,0 +1,6 @@
+interface:
+  display_name: "TDD Development Workflow (parallel)"
+  short_description: "Plan a board, then dispatch its tickets to parallel workers"
+  default_prompt: "Use $tdd-develop-parallel to plan this change and run its tickets with parallel workers, one commit per ticket."
+policy:
+  allow_implicit_invocation: false

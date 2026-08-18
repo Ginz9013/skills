@@ -1,0 +1,5 @@
+{
+  "name": "tdd-workflow",
+  "description": "Interface-first TDD development workflow: plan a board, implement one ticket at a time, sequentially or dispatched to parallel workers.",
+  "version": "0.1.0"
+}

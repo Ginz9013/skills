@@ -1,0 +1,6 @@
+interface:
+  display_name: "TDD Implement"
+  short_description: "Implement exactly one ticket test-first and return an execution report"
+  default_prompt: "Use $tdd-implement to implement exactly one ticket from the approved board."
+policy:
+  allow_implicit_invocation: true
