@@ -22,6 +22,7 @@ in the ticket's report if relevant, and continue.
 Any one of these stops the ticket, even though the round otherwise
 continues:
 
+<hard-rules>
 1. **Out-of-repo deletion or overwrite.** Deleting or overwriting
    anything outside the repository's version control (databases, user
    files, cloud resources).
@@ -37,6 +38,7 @@ continues:
 5. **A defect in the approved board or spec itself.** Its acceptance
    criteria contradict the code as it actually exists, or otherwise
    cannot be satisfied as written.
+</hard-rules>
 
 For every category above:
 
