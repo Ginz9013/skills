@@ -33,7 +33,7 @@ Read the ticket and the spec before writing anything. Read the repository's inst
 
 ## The loop
 
-Work one behavior at a time. Use `tdd` for the red-green loop discipline.
+Work one behavior at a time. Use `tdd` for the red-green loop discipline. If it is not installed, stop and tell the user to install it — do not run red-green from your own judgment.
 
 1. **Red** — write one failing test through the approved public seam. State the failure you expect, run the test, and confirm the observed failure matches. Capture the output.
 2. **Green** — write only enough production code to pass that test. Do not anticipate later slices.
