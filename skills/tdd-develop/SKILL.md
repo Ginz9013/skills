@@ -41,7 +41,7 @@ Mark the ticket's status in the board, and in the tracker when publishing.
 
 ## 3. Review on two axes
 
-Use `code-review` when installed. Review the diff from an explicit fixed point.
+Use `code-review`. Review the diff from an explicit fixed point.
 
 - **Standards** — repository instructions, coding standards, architecture decisions, meaningful code smells. Treat heuristics as judgment calls, and skip what tooling already enforces.
 - **Spec** — every acceptance criterion, checked for missing, partial, incorrect, or unrequested behavior.

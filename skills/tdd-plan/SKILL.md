@@ -28,7 +28,7 @@ When the board is stored as files, default to `.scratch/<feature-slug>/` — one
 
 ## Phase 1: Discover
 
-Clarify the goal and sharpen the domain model. Use `grilling` for the interview discipline and `domain-modeling` for glossary and ADR work when they are installed; otherwise do this directly.
+Clarify the goal and sharpen the domain model. Use `grilling` for the interview discipline and `domain-modeling` for glossary and ADR work.
 
 1. Read the repository's instructions, `CONTEXT.md`, ADRs, and the smallest useful portion of the code.
 2. Establish the desired outcome, users, observable behavior, constraints, non-goals, edge cases, and unresolved decisions.
@@ -41,7 +41,7 @@ When a question cannot be settled by conversation, pause and recommend the small
 
 ## Phase 2: Design the interface and test seams
 
-Design before specifying. Use `codebase-design` when installed.
+Design before specifying. Use `codebase-design`.
 
 1. Identify the modules that own the behavior.
 2. State each module's responsibilities and explicit non-responsibilities.

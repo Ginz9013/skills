@@ -53,9 +53,9 @@ tdd-implement   exactly one ticket → red-green → execution report
 
 ### Claude Code
 
-As a plugin — install this repository as a marketplace or point `--plugin-dir` at it. That bundles all five skills plus the worker agent, which avoids the main failure mode of split skills: an entry point that is installed while the core skills it names are not.
+As a plugin — install this repository as a marketplace or point `--plugin-dir` at it. That bundles the five core skills, the five vendored dependencies, and the worker agent together, which avoids the main failure mode of split skills: an entry point that is installed while the skills it names are not.
 
-Or copy individual skills into `.claude/skills/` (project) or `~/.claude/skills/` (user). If you do, install all five; the entry points name the core skills explicitly and will stop rather than improvise when one is missing.
+Or copy individual skills into `.claude/skills/` (project) or `~/.claude/skills/` (user). If you do, install all five core skills plus the five vendored ones (or resolve their symlinks first — see [Vendored dependencies](#vendored-dependencies)); the entry points name them explicitly and will stop rather than improvise when one is missing.
 
 ### Codex
 
@@ -95,6 +95,22 @@ It says which precondition failed. Silent degradation is worse than serial execu
 - Parallel execution has not yet been exercised end-to-end on a repository with a concurrent-safe test suite.
 - `loop-engineering` reads `tdd-develop-parallel`'s `batching.md` and `delegation-packet.md` by relative path rather than copying them, so it silently breaks if those files are renamed or moved without updating `loop-engineering/SKILL.md`.
 
+## Vendored dependencies
+
+This workflow delegates to five skills from [Matt Pocock's skills](https://github.com/mattpocock/skills) — `grilling`, `domain-modeling`, `codebase-design`, `tdd`, `code-review` — for the interview discipline, glossary/ADR work, interface design, the red-green loop, and standards/spec review respectively.
+
+They are vendored, not optional. The upstream repository is merged as-is, untouched, into [vendor/mattpocock-skills/](vendor/mattpocock-skills/) via `git subtree`, and `skills/grilling`, `skills/domain-modeling`, `skills/codebase-design`, `skills/tdd`, `skills/code-review` are symlinks into that tree (`skills/<name>` → `vendor/mattpocock-skills/skills/<category>/<name>`). Cloning or downloading this repository gets the real files; there is no separate install step and no silent "skill not found" fallback in `tdd-plan`, `tdd-implement`, or `tdd-develop`.
+
+To pull upstream updates:
+
+```
+git subtree pull --prefix=vendor/mattpocock-skills mattpocock-skills main --squash
+```
+
+(add the remote once with `git remote add mattpocock-skills https://github.com/mattpocock/skills.git`). If upstream renames or moves one of the five skills, its symlink target changes and needs updating by hand.
+
+Codex installs (see above) copy directories under `skills/` verbatim — resolve the five symlinks into real files first (e.g. `cp -rL`), since `~/.codex/skills/` won't have this repo's `vendor/` alongside it.
+
 ## Credit
 
-The composition model — thin user-invoked orchestration over reusable model-invoked disciplines — follows [Matt Pocock's skills](https://github.com/mattpocock/skills). This workflow delegates to `grilling`, `domain-modeling`, `codebase-design`, `tdd`, and `code-review` when they are installed, and works without them.
+The composition model — thin user-invoked orchestration over reusable model-invoked disciplines — follows [Matt Pocock's skills](https://github.com/mattpocock/skills).
