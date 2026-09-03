@@ -1,6 +1,6 @@
 ---
 name: tdd-worker
-description: Implements exactly one ticket from an approved board and returns an execution report. Dispatched by tdd-develop-parallel — not for ad-hoc work.
+description: Implements exactly one ticket from an approved board and returns an execution report. Dispatched by tdd-develop-parallel or loop-engineering — not for ad-hoc work.
 tools: Bash, Read, Edit, Write, Glob, Grep, Skill
 model: inherit
 ---
