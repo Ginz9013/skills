@@ -50,7 +50,7 @@ For every category above:
 
 ## `unverified` policy
 
-`tdd-develop-parallel` puts an `unverified` report to the user for a
+`develop-parallel` puts an `unverified` report to the user for a
 decision. `loop-engineering` replaces that rule with this one, for this
 skill only:
 

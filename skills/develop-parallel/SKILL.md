@@ -1,6 +1,6 @@
 ---
-name: tdd-develop-parallel
-description: Run the complete interface-first TDD workflow for one change with parallel workers — plan a board, then dispatch its tickets in collision-safe batches to sub-agents, landing one commit per ticket, then review. Use only when the user explicitly invokes this skill or asks to run their TDD workflow with parallel sub-agents. For a single-process run, use tdd-develop instead.
+name: develop-parallel
+description: Run the complete interface-first TDD workflow for one change with parallel workers — plan a board, then dispatch its tickets in collision-safe batches to sub-agents, landing one commit per ticket, then review. Use only when the user explicitly invokes this skill or asks to run their TDD workflow with parallel sub-agents. For a single-process run, use develop instead.
 ---
 
 # TDD Develop (parallel)
@@ -11,7 +11,7 @@ Work proceeds one **round** at a time: compute the frontier, cut it down to tick
 
 ## 0. Preconditions
 
-Check these before planning. Each failure is a reason to degrade to `tdd-develop`, not to stop.
+Check these before planning. Each failure is a reason to degrade to `develop`, not to stop.
 
 - **Git.** The quarantine and per-ticket commit model requires it. Without git, plan here but execute sequentially.
 - **Sub-agent support.** The platform must be able to run workers concurrently. Without it, the whole board is sequential.
@@ -22,13 +22,13 @@ Say which preconditions failed and what you are doing about it. Silent degradati
 
 ## 1. Plan
 
-Use the installed `tdd-plan` skill to produce the board. Tell it:
+Use the installed `plan` skill to produce the board. Tell it:
 
 - the change being planned;
 - **execution mode: parallel** — the board must be written to files, because workers cannot see this conversation;
 - the publication target — a tracker, or none.
 
-If `tdd-plan` is not installed, say so and stop rather than improvising. Get the board approved before any code is written.
+If `plan` is not installed, say so and stop rather than improvising. Get the board approved before any code is written.
 
 ## 2. Each round
 
@@ -49,7 +49,7 @@ Read [references/batching.md](references/batching.md) for the frontier, blast-ra
 
 A worker's report is a claim, not a result. Sort the batch:
 
-- **done** — candidate for commit, *after* its evidence passes the rules in `tdd-implement`'s execution report reference. Count red-green pairs against acceptance criteria; check that expected and observed failures match; in worktree mode, check the per-slice commits exist.
+- **done** — candidate for commit, *after* its evidence passes the rules in `implement`'s execution report reference. Count red-green pairs against acceptance criteria; check that expected and observed failures match; in worktree mode, check the per-slice commits exist.
 - **unverified** — the acceptance criteria may be met but the red-green claim is unsupported. Quarantine it and put the decision to the user: redo the ticket, or accept it knowingly. Never commit it silently as `done`.
 - **partial** or **blocked** — not committed this round.
 - **collided** — the worker edited files outside its list. Not committable as a clean ticket, because the ownership map that defines the commit boundary was wrong. Resolve with the user before anything else.

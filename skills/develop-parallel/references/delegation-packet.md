@@ -7,7 +7,7 @@ Use the project's TDD worker agent type when one is defined. Otherwise spawn a g
 ## Shape
 
 ```markdown
-Use the installed `tdd-implement` skill to implement exactly ticket <NN>.
+Use the installed `implement` skill to implement exactly ticket <NN>.
 Read its instructions before you begin. Implement that ticket and nothing else.
 
 Ticket:        <path to the ticket file>
@@ -38,7 +38,7 @@ committing.  [worktree variant: Commit each slice in your worktree — the
 failing test, then the implementation. Never push.]
 
 Your final message is the deliverable. Follow the execution report structure
-from the `tdd-implement` skill, including per-slice red evidence. A report
+from the `implement` skill, including per-slice red evidence. A report
 without it will be quarantined and not committed.
 ```
 

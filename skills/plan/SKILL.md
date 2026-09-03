@@ -1,11 +1,11 @@
 ---
-name: tdd-plan
+name: plan
 description: Produce an approved board — spec, public interfaces, test seams, vertical-slice tickets, write ownership, and verification commands — for one feature, change, or bug fix. Use when an orchestration skill asks for a plan before implementation, or when the user wants work planned before any code is written. Never writes production code.
 ---
 
 # TDD Plan
 
-Produce **one board**: an approved specification plus an ordered set of vertical-slice tickets that `tdd-implement` can execute one ticket at a time, in a single process or dispatched to parallel workers.
+Produce **one board**: an approved specification plus an ordered set of vertical-slice tickets that `implement` can execute one ticket at a time, in a single process or dispatched to parallel workers.
 
 You do not write production code, do not edit tests, and do not run any git command that writes.
 

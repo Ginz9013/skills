@@ -1,0 +1,21 @@
+{
+  "name": "kouhei-workflow",
+  "owner": {
+    "name": "kouhei"
+  },
+  "description": "kouhei's interface-first TDD development workflow for coding agents, as an installable Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "kouhei-workflow",
+      "source": "./",
+      "description": "Plan a board, implement one ticket at a time test-first, and review on two axes — sequentially or dispatched to parallel workers.",
+      "category": "engineering",
+      "keywords": [
+        "engineering",
+        "tdd",
+        "workflow",
+        "code-review"
+      ]
+    }
+  ]
+}

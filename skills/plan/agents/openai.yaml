@@ -1,6 +1,6 @@
 interface:
   display_name: "TDD Plan"
   short_description: "Produce an approved board: spec, interfaces, seams, tickets, write ownership"
-  default_prompt: "Use $tdd-plan to produce an approved board for this change."
+  default_prompt: "Use $plan to produce an approved board for this change."
 policy:
   allow_implicit_invocation: true

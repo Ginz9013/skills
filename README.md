@@ -1,4 +1,4 @@
-# tdd-workflow
+# kouhei-workflow
 
 An interface-first TDD development workflow for coding agents, packaged as a plugin of five composable skills.
 
@@ -11,33 +11,33 @@ Most workflow skills are one long document. That works until you want a second e
 Here the seam is cut at **one ticket → one verified diff**:
 
 ```
-tdd-plan       board: spec + interfaces + seams + tickets + write ownership
-                 │
-     ┌───────────┴───────────┐
-tdd-develop            tdd-develop-parallel
-  one ticket at a time     collision-safe batches → sub-agents
-     └───────────┬───────────┘
-                 │
-tdd-implement   exactly one ticket → red-green → execution report
+plan              board: spec + interfaces + seams + tickets + write ownership
+       │
+   ┌───┴───┐
+develop        develop-parallel
+  one ticket at a time    collision-safe batches → sub-agents
+   └───┬───┘
+       │
+implement    exactly one ticket → red-green → execution report
 ```
 
-`tdd-implement` does not know whether it is the only worker or one of four. That is what lets both entry points share it verbatim. The entry points stay thin — they own git, approval gates, and integration; they own no engineering method at all.
+`implement` does not know whether it is the only worker or one of four. That is what lets both entry points share it verbatim. The entry points stay thin — they own git, approval gates, and integration; they own no engineering method at all.
 
 ## The skills
 
 | Skill | Kind | Scope | Touches git |
 | --- | --- | --- | --- |
-| `tdd-develop` | user-invoked | Entry: plan, then implement tickets one at a time, then review | yes |
-| `tdd-develop-parallel` | user-invoked | Entry: plan, then dispatch batches to workers, one commit per ticket | yes |
-| `tdd-plan` | model-invoked | Produce an approved board | no |
-| `tdd-implement` | model-invoked | Implement **exactly one** ticket, test-first | no |
+| `develop` | user-invoked | Entry: plan, then implement tickets one at a time, then review | yes |
+| `develop-parallel` | user-invoked | Entry: plan, then dispatch batches to workers, one commit per ticket | yes |
+| `plan` | model-invoked | Produce an approved board | no |
+| `implement` | model-invoked | Implement **exactly one** ticket, test-first | no |
 | `loop-engineering` | user-invoked | Entry: plan, then run every round unattended, one commit per ticket, autonomous within the reversible-decision redline | yes |
 
-`agents/tdd-worker.md` is an optional Claude Code sub-agent definition. It is a thin shell that loads `tdd-implement`; the discipline itself lives in the skill, so nothing is duplicated per platform.
+`agents/worker.md` is an optional Claude Code sub-agent definition. It is a thin shell that loads `implement`; the discipline itself lives in the skill, so nothing is duplicated per platform.
 
 ## Core ideas
 
-**The board is the contract.** `tdd-plan` produces a spec, the public interfaces, the agreed test seams, vertical-slice tickets, and — always, regardless of execution mode — the **write ownership** of each ticket. It also measures the repository's current baseline of failing tests and type errors, so a worker never "helpfully" repairs something outside its scope.
+**The board is the contract.** `plan` produces a spec, the public interfaces, the agreed test seams, vertical-slice tickets, and — always, regardless of execution mode — the **write ownership** of each ticket. It also measures the repository's current baseline of failing tests and type errors, so a worker never "helpfully" repairs something outside its scope.
 
 **Write ownership does double duty.** During a parallel round it is the collision boundary: two tickets naming the same file cannot run together, because in a shared working tree the loser's edit disappears with no conflict marker. Afterwards it is the commit boundary — which is why a wrong list corrupts history, not just the tree.
 
@@ -47,13 +47,20 @@ tdd-implement   exactly one ticket → red-green → execution report
 
 **Publication and storage are independent.** Whether a tracker is used decides where the board is announced. Whether the board is written to files decides where it lives during execution — and parallel runs require files, because workers do not share the orchestrator's conversation.
 
-**Autonomy has a redline.** `loop-engineering` runs `tdd-develop-parallel`'s round loop unattended, deciding on its own except when an action is irreversible outside git — deleting or overwriting anything outside version control, touching secrets or credentials, force-pushing, or discovering that the board itself is defective. Anything short of that line, the loop keeps moving; anything past it, that ticket stops and its dependents block. The full redline is recorded in [autonomy-rules.md](skills/loop-engineering/references/autonomy-rules.md).
+**Autonomy has a redline.** `loop-engineering` runs `develop-parallel`'s round loop unattended, deciding on its own except when an action is irreversible outside git — deleting or overwriting anything outside version control, touching secrets or credentials, force-pushing, or discovering that the board itself is defective. Anything short of that line, the loop keeps moving; anything past it, that ticket stops and its dependents block. The full redline is recorded in [autonomy-rules.md](skills/loop-engineering/references/autonomy-rules.md).
 
 ## Install
 
 ### Claude Code
 
-As a plugin — install this repository as a marketplace or point `--plugin-dir` at it. That bundles the five core skills, the five vendored dependencies, and the worker agent together, which avoids the main failure mode of split skills: an entry point that is installed while the skills it names are not.
+As a plugin — install this repository as a marketplace (it ships its own `.claude-plugin/marketplace.json`) or point `--plugin-dir` at it:
+
+```
+/plugin marketplace add <path-or-git-url-to-this-repo>
+/plugin install kouhei-workflow
+```
+
+That bundles the five core skills, the five vendored dependencies, and the worker agent together under the `kouhei-workflow:` namespace (e.g. `kouhei-workflow:plan`), which avoids the main failure mode of split skills: an entry point that is installed while the skills it names are not.
 
 Or copy individual skills into `.claude/skills/` (project) or `~/.claude/skills/` (user). If you do, install all five core skills plus the five vendored ones (or resolve their symlinks first — see [Vendored dependencies](#vendored-dependencies)); the entry points name them explicitly and will stop rather than improvise when one is missing.
 
@@ -79,7 +86,7 @@ Probe testing on Claude Code found the honest-failure behavior reliable: when a 
 
 ## Preconditions for parallel execution
 
-`tdd-develop-parallel` checks these and degrades to sequential rather than failing:
+`develop-parallel` checks these and degrades to sequential rather than failing:
 
 - the repository is under git — quarantine and per-ticket commits depend on it;
 - the platform can run sub-agents concurrently;
@@ -93,13 +100,13 @@ It says which precondition failed. Silent degradation is worse than serial execu
 - The rule that a worker must never run a writing git command is enforced by instruction, not by tooling: a sub-agent's tool whitelist cannot restrict git, because git runs through the shell. Enforcing it mechanically needs a `permissions.deny` rule in your own settings.
 - The Codex and Gemini paths are unverified against current CLI builds.
 - Parallel execution has not yet been exercised end-to-end on a repository with a concurrent-safe test suite.
-- `loop-engineering` reads `tdd-develop-parallel`'s `batching.md` and `delegation-packet.md` by relative path rather than copying them, so it silently breaks if those files are renamed or moved without updating `loop-engineering/SKILL.md`.
+- `loop-engineering` reads `develop-parallel`'s `batching.md` and `delegation-packet.md` by relative path rather than copying them, so it silently breaks if those files are renamed or moved without updating `loop-engineering/SKILL.md`.
 
 ## Vendored dependencies
 
 This workflow delegates to five skills from [Matt Pocock's skills](https://github.com/mattpocock/skills) — `grilling`, `domain-modeling`, `codebase-design`, `tdd`, `code-review` — for the interview discipline, glossary/ADR work, interface design, the red-green loop, and standards/spec review respectively.
 
-They are vendored, not optional. The upstream repository is merged as-is, untouched, into [vendor/mattpocock-skills/](vendor/mattpocock-skills/) via `git subtree`, and `skills/grilling`, `skills/domain-modeling`, `skills/codebase-design`, `skills/tdd`, `skills/code-review` are symlinks into that tree (`skills/<name>` → `vendor/mattpocock-skills/skills/<category>/<name>`). Cloning or downloading this repository gets the real files; there is no separate install step and no silent "skill not found" fallback in `tdd-plan`, `tdd-implement`, or `tdd-develop`.
+They are vendored, not optional. The upstream repository is merged as-is, untouched, into [vendor/mattpocock-skills/](vendor/mattpocock-skills/) via `git subtree`, and `skills/grilling`, `skills/domain-modeling`, `skills/codebase-design`, `skills/tdd`, `skills/code-review` are symlinks into that tree (`skills/<name>` → `vendor/mattpocock-skills/skills/<category>/<name>`). Cloning or downloading this repository gets the real files; there is no separate install step and no silent "skill not found" fallback in `plan`, `implement`, or `develop`.
 
 To pull upstream updates:
 

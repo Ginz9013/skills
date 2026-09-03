@@ -1,5 +1,5 @@
 ---
-name: tdd-implement
+name: implement
 description: Implement exactly one ticket from an approved board, test-first, and return an execution report. Use when an orchestration skill assigns a single ticket, or when the user asks to implement one ticket red-green. Scope is one ticket — never a whole board. Never runs a git command that writes.
 ---
 
