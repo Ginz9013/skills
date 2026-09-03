@@ -1,6 +1,6 @@
 # Summary report template
 
-`loop-engineering` writes one `summary.md` per run, at
+`develop-loop` writes one `summary.md` per run, at
 `.scratch/<feature-slug>/summary.md`. It is produced once, when the run
 ends — either because every ticket on the board reached a terminal
 status, or because the circuit breaker fired (see `autonomy-rules.md`).

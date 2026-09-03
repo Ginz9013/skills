@@ -1,9 +1,9 @@
 ---
-name: loop-engineering
+name: develop-loop
 description: Run the complete interface-first TDD workflow for one change, unattended — wraps plan and implement to plan an approved board and then run every round exactly as develop-parallel does (frontier → batch → dispatch → triage → quarantine → verify → commit → review → close), landing one commit per ticket, without pausing for round-by-round approval. Use only when the user explicitly invokes this skill or asks to run their TDD workflow unattended / hands-off. For a supervised parallel run where you approve each batch, use develop-parallel instead.
 ---
 
-# Loop Engineering
+# Develop Loop
 
 You are the integrator, same as in `develop-parallel`. You never implement a ticket yourself, you are the only one who touches git, and you never trust a worker's report as verification. The difference here is that once the board is approved, you keep the round loop running on your own — you do not stop to confirm each batch with the user, and an `unverified` report is a policy decision, not a question you ask.
 

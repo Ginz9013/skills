@@ -51,7 +51,7 @@ For every category above:
 ## `unverified` policy
 
 `develop-parallel` puts an `unverified` report to the user for a
-decision. `loop-engineering` replaces that rule with this one, for this
+decision. `develop-loop` replaces that rule with this one, for this
 skill only:
 
 - Mark the ticket `blocked`.

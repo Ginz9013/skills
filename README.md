@@ -31,7 +31,7 @@ implement    exactly one ticket → red-green → execution report
 | `develop-parallel` | user-invoked | Entry: plan, then dispatch batches to workers, one commit per ticket | yes |
 | `plan` | model-invoked | Produce an approved board | no |
 | `implement` | model-invoked | Implement **exactly one** ticket, test-first | no |
-| `loop-engineering` | user-invoked | Entry: plan, then run every round unattended, one commit per ticket, autonomous within the reversible-decision redline | yes |
+| `develop-loop` | user-invoked | Entry: plan, then run every round unattended, one commit per ticket, autonomous within the reversible-decision redline | yes |
 
 `agents/worker.md` is an optional Claude Code sub-agent definition. It is a thin shell that loads `implement`; the discipline itself lives in the skill, so nothing is duplicated per platform.
 
@@ -47,7 +47,7 @@ implement    exactly one ticket → red-green → execution report
 
 **Publication and storage are independent.** Whether a tracker is used decides where the board is announced. Whether the board is written to files decides where it lives during execution — and parallel runs require files, because workers do not share the orchestrator's conversation.
 
-**Autonomy has a redline.** `loop-engineering` runs `develop-parallel`'s round loop unattended, deciding on its own except when an action is irreversible outside git — deleting or overwriting anything outside version control, touching secrets or credentials, force-pushing, or discovering that the board itself is defective. Anything short of that line, the loop keeps moving; anything past it, that ticket stops and its dependents block. The full redline is recorded in [autonomy-rules.md](skills/loop-engineering/references/autonomy-rules.md).
+**Autonomy has a redline.** `develop-loop` runs `develop-parallel`'s round loop unattended, deciding on its own except when an action is irreversible outside git — deleting or overwriting anything outside version control, touching secrets or credentials, force-pushing, or discovering that the board itself is defective. Anything short of that line, the loop keeps moving; anything past it, that ticket stops and its dependents block. The full redline is recorded in [autonomy-rules.md](skills/develop-loop/references/autonomy-rules.md).
 
 ## Install
 
@@ -100,7 +100,7 @@ It says which precondition failed. Silent degradation is worse than serial execu
 - The rule that a worker must never run a writing git command is enforced by instruction, not by tooling: a sub-agent's tool whitelist cannot restrict git, because git runs through the shell. Enforcing it mechanically needs a `permissions.deny` rule in your own settings.
 - The Codex and Gemini paths are unverified against current CLI builds.
 - Parallel execution has not yet been exercised end-to-end on a repository with a concurrent-safe test suite.
-- `loop-engineering` reads `develop-parallel`'s `batching.md` and `delegation-packet.md` by relative path rather than copying them, so it silently breaks if those files are renamed or moved without updating `loop-engineering/SKILL.md`.
+- `develop-loop` reads `develop-parallel`'s `batching.md` and `delegation-packet.md` by relative path rather than copying them, so it silently breaks if those files are renamed or moved without updating `develop-loop/SKILL.md`.
 
 ## Vendored dependencies
 
