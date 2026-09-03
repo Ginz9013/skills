@@ -1,6 +1,6 @@
 # tdd-workflow
 
-An interface-first TDD development workflow for coding agents, packaged as a plugin of four composable skills.
+An interface-first TDD development workflow for coding agents, packaged as a plugin of five composable skills.
 
 Plan a board, implement one ticket at a time test-first, and review on two independent axes — running the tickets sequentially in one process, or dispatching them to parallel workers, without maintaining two copies of the method.
 
@@ -31,6 +31,7 @@ tdd-implement   exactly one ticket → red-green → execution report
 | `tdd-develop-parallel` | user-invoked | Entry: plan, then dispatch batches to workers, one commit per ticket | yes |
 | `tdd-plan` | model-invoked | Produce an approved board | no |
 | `tdd-implement` | model-invoked | Implement **exactly one** ticket, test-first | no |
+| `loop-engineering` | user-invoked | Entry: plan, then run every round unattended, one commit per ticket, autonomous within the reversible-decision redline | yes |
 
 `agents/tdd-worker.md` is an optional Claude Code sub-agent definition. It is a thin shell that loads `tdd-implement`; the discipline itself lives in the skill, so nothing is duplicated per platform.
 
@@ -46,13 +47,15 @@ tdd-implement   exactly one ticket → red-green → execution report
 
 **Publication and storage are independent.** Whether a tracker is used decides where the board is announced. Whether the board is written to files decides where it lives during execution — and parallel runs require files, because workers do not share the orchestrator's conversation.
 
+**Autonomy has a redline.** `loop-engineering` runs `tdd-develop-parallel`'s round loop unattended, deciding on its own except when an action is irreversible outside git — deleting or overwriting anything outside version control, touching secrets or credentials, force-pushing, or discovering that the board itself is defective. Anything short of that line, the loop keeps moving; anything past it, that ticket stops and its dependents block. The full redline is recorded in [autonomy-rules.md](skills/loop-engineering/references/autonomy-rules.md).
+
 ## Install
 
 ### Claude Code
 
-As a plugin — install this repository as a marketplace or point `--plugin-dir` at it. That bundles all four skills plus the worker agent, which avoids the main failure mode of split skills: an entry point that is installed while the core skills it names are not.
+As a plugin — install this repository as a marketplace or point `--plugin-dir` at it. That bundles all five skills plus the worker agent, which avoids the main failure mode of split skills: an entry point that is installed while the core skills it names are not.
 
-Or copy individual skills into `.claude/skills/` (project) or `~/.claude/skills/` (user). If you do, install all four; the entry points name the core skills explicitly and will stop rather than improvise when one is missing.
+Or copy individual skills into `.claude/skills/` (project) or `~/.claude/skills/` (user). If you do, install all five; the entry points name the core skills explicitly and will stop rather than improvise when one is missing.
 
 ### Codex
 
@@ -90,6 +93,7 @@ It says which precondition failed. Silent degradation is worse than serial execu
 - The rule that a worker must never run a writing git command is enforced by instruction, not by tooling: a sub-agent's tool whitelist cannot restrict git, because git runs through the shell. Enforcing it mechanically needs a `permissions.deny` rule in your own settings.
 - The Codex and Gemini paths are unverified against current CLI builds.
 - Parallel execution has not yet been exercised end-to-end on a repository with a concurrent-safe test suite.
+- `loop-engineering` reads `tdd-develop-parallel`'s `batching.md` and `delegation-packet.md` by relative path rather than copying them, so it silently breaks if those files are renamed or moved without updating `loop-engineering/SKILL.md`.
 
 ## Credit
 
