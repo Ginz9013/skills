@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Produce an approved board — spec, public interfaces, test seams, vertical-slice tickets, write ownership, and verification commands — for one feature, change, or bug fix. Use when an orchestration skill asks for a plan before implementation, or when the user wants work planned before any code is written. Never writes production code.
+description: Produce an approved board — spec, public interfaces, test seams, vertical-slice tickets, write ownership, and verification commands — for one feature, change, or bug fix. Sharpens the domain model (glossary, ADRs) and the interface design along the way. Use when an orchestration skill asks for a plan before implementation, or when the user wants work planned before any code is written. Never writes production code.
 ---
 
 # TDD Plan
